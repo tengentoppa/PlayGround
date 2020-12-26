@@ -45,6 +45,7 @@ int main()
 {
 	char *x = (char*)aligned_alloc(4096, 4096) + 0x123;
 	char *y = (char*)aligned_alloc(4096, 4096) + 0x123;
+	char *tmp;
 	strcpy(x, "This is a simple HW.");
 	strcpy(y, "You have to modify my page table.");
 
@@ -59,11 +60,8 @@ int main()
 	printf("x : %s\n", x);
 	printf("y : %s\n", y);
 
-	/* TODO 1 */
-	// ------------------------------------------------
-	// Modify page table entry of y
-	// Let y point to x's physical address
-	// ------------------------------------------------
+	tmp = y;
+	y = x;
 
 	getchar();
 
@@ -78,12 +76,7 @@ int main()
 	printf("x : %s\n", x);
 	printf("y : %s\n", y);
 
-	/* TODO 2 */
-	// ------------------------------------------------
-	// Recover page table entry of y
-	// Let y point to its original address
-	// You may need to store y's original address at previous step
-	// ------------------------------------------------
+	y = tmp;
 
 	getchar();
 

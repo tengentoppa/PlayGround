@@ -3,25 +3,35 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <unistd.h>
+#include "clearBuffer.c"
 
 #define SHM_KEY 123456
 
 int *ptr;
+int shmid;
 
 int main () {
     int id;
+    char themeSplit[] = "\033[33m";
+    char themeMessage[] = "\033[1;32m";
+    char themeEnd[] = "\033[0m";
 
-    /************************* TODO 1 *************************/
-    // Attach the memory section, the return value is a pointer to 
-    // the shared memory section
-    /************************* TODO 1 *************************/
+    if ((shmid = shmget(SHM_KEY, 1024, IPC_CREAT | 0666)) < 0) {
+        perror("shmget empty");
+        exit(1);
+    }
 
-    printf("\033[1;33m[client] The value is %d\033[0m\n", ptr[0]);
+    if ((ptr = shmat(shmid, NULL, 0)) == (int *) -1) {
+        perror("shmat");
+        exit(1);
+    }
+
+    printf("%s[client] The value is %d%s\n",themeMessage, ptr[0],themeEnd);
 
     while(1) {
         int cmd;
 
-        printf("\n");
+        printf("%s----------------------------------%s\n", themeSplit, themeEnd);
         printf("1: Show the value\n");
         printf("2: Modify the value\n");
         printf("3: Exit\n");
@@ -29,12 +39,15 @@ int main () {
         scanf("%d", &cmd);
 
         if (cmd == 1)
-            printf("\033[1;33m[client] The value is %d\033[0m\n", ptr[0]);
+            printf("%s[client] The value is %d%s\n", themeMessage, ptr[0],themeEnd);
         else if (cmd == 2) {
             printf("Input new value: ");
             scanf("%d", &ptr[0]);
+            cleanBuffer();
         }
-        else
-            break;        
+        else {
+            cleanBuffer();
+            break;      
+        }  
     } 
 }
