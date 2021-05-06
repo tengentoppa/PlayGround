@@ -17,7 +17,16 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "WebApi_core5": {
+    "WebApi_core5_Prod": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      },
+      "dotnetRunMessages": "true",
+      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+    },
+    "WebApi_core5_Dev": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
