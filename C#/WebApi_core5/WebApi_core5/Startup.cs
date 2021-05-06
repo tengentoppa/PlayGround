@@ -58,6 +58,7 @@ namespace WebApi_core5
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute("AreaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute("default_route", "{controller}/{action}/{id?}");
             });
         }
