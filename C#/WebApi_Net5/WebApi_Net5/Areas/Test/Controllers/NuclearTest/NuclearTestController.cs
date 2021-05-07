@@ -17,9 +17,9 @@ namespace WebApi_core5.Controllers
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<NuclearTestController> _logger;
 
-        public NuclearTestController(ILogger<WeatherForecastController> logger)
+        public NuclearTestController(ILogger<NuclearTestController> logger)
         {
             _logger = logger;
             _logger.LogDebug("owo", "owo1", "owo2", "owo3", "owo4");
@@ -92,6 +92,12 @@ namespace WebApi_core5.Controllers
             return $"{greetings}\n" +
                 $"{string.Join('\n', greetings.Children)}" +
                 $"I am Batman peko desu.\n";
+        }
+
+        [HttpGet]
+        public void ExceptionTest()
+        {
+            throw new Exception("Exception Test");
         }
     }
 }

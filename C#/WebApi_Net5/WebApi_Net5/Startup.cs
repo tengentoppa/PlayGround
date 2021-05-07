@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
@@ -41,7 +44,7 @@ namespace WebApi_core5
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {
@@ -49,6 +52,22 @@ namespace WebApi_core5
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi_core5 v1"));
             }
+
+            app.UseExceptionHandler(d => d.Run(async context =>
+                {
+                    var exception = context.Features
+                        .Get<IExceptionHandlerPathFeature>()
+                        .Error;
+
+                    logger.LogError(exception, exception.Message);
+
+                    var response = new { error = exception.Message };
+                    if (!context.Response.HasStarted)
+                    {
+                        await context.Response.WriteAsJsonAsync(response);
+                    }
+                }
+            ));
 
             app.UseHttpsRedirection();
 
