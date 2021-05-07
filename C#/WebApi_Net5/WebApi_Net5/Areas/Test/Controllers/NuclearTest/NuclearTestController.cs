@@ -3,14 +3,14 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using WebApi_Net5.Areas.Test.Controllers.NuclearTest.ReqModel;
 
 namespace WebApi_core5.Controllers
 {
     [ApiController]
     [Area("Test")]
-    [Route("[area]/[controller]")]
-    public class WeatherForecast1Controller : ControllerBase
+    [Route("[area]/[controller]/[action]")]
+    public class NuclearTestController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
         {
@@ -19,7 +19,7 @@ namespace WebApi_core5.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecast1Controller(ILogger<WeatherForecastController> logger)
+        public NuclearTestController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
         }
@@ -42,36 +42,50 @@ namespace WebApi_core5.Controllers
         }
 
         /// <summary>
-        /// 哪泥，居然成功惹
+        /// 成功惹
         /// </summary>
         /// <param name="id">Guraaaaaaa</param>
         /// <returns></returns>
-        [HttpGet("GetTest")]
+        [HttpGet]
         public IEnumerable<int> GetTest(int id)
         {
             return Enumerable.Range(1, id);
         }
 
         /// <summary>
-        /// I AM batman
+        /// Hello Batman
         /// </summary>
-        /// <param name="batMan">so bat</param>
-        /// <returns>0..0</returns>
-        [HttpPost("IAmBatMan")]
-        public string IAmBatman(Batman batMan)
+        /// <remarks>
+        /// # Welcome to Markdown zone
+        /// ### Sample area
+        /// Sample request:
+        /// 
+        ///     {
+        ///         "Name": "YourName",
+        ///         "GreetingMessage": "Greeting",
+        ///         "Children": [
+        ///             { "Name": "OtherName", "GreetingMessage": "Farewell" },
+        ///             { "Name": "AnotherName", "GreetingMessage": "Nice to meet you" }
+        ///         ]
+        ///     }
+        /// ---
+        ///     Arye~~~~~
+        /// 1. a
+        /// 2. b
+        /// * c
+        /// * d
+        /// ```
+        /// const double pi = 3.1415926;
+        /// ```
+        /// </remarks>
+        /// <param name="greetings">Request model</param>
+        /// <returns></returns>
+        [HttpPost]
+        public string IAmBatman([FromBody] Greetings greetings)
         {
-            return $"I am Batman. {batMan.Message}";
-        }
-
-        /// <summary>
-        /// cba
-        /// </summary>
-        public class Batman
-        {
-            /// <summary>
-            /// abc
-            /// </summary>
-            public string Message { get; set; }
+            return $"{greetings}\n" +
+                $"{string.Join('\n', greetings.Children)}" +
+                $"I am Batman peko desu.\n";
         }
     }
 }
