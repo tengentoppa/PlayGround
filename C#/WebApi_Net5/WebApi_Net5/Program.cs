@@ -31,7 +31,6 @@ namespace WebApi_core5
                 .ConfigureLogging(logging =>
                     {
                         logging.ClearProviders();
-                        logging.AddConsole();
                     }
                 )
                 .UseNLog()

@@ -53,21 +53,24 @@ namespace WebApi_core5
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi_core5 v1"));
             }
 
-            app.UseExceptionHandler(d => d.Run(async context =>
-                {
-                    var exception = context.Features
-                        .Get<IExceptionHandlerPathFeature>()
-                        .Error;
-
-                    logger.LogError(exception, exception.Message);
-
-                    var response = new { error = exception.Message };
-                    if (!context.Response.HasStarted)
+            if (env.IsProduction())
+            {
+                app.UseExceptionHandler(d => d.Run(async context =>
                     {
-                        await context.Response.WriteAsJsonAsync(response);
+                        var exception = context.Features
+                            .Get<IExceptionHandlerPathFeature>()
+                            .Error;
+
+                        logger.LogError(exception, exception.Message);
+
+                        var response = new { error = exception.Message };
+                        if (!context.Response.HasStarted)
+                        {
+                            await context.Response.WriteAsJsonAsync(response);
+                        }
                     }
-                }
-            ));
+                ));
+            }
 
             app.UseHttpsRedirection();
 
@@ -77,8 +80,8 @@ namespace WebApi_core5
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute("AreaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapControllerRoute("default_route", "{controller}/{action}/{id?}");
+                endpoints.MapControllerRoute("AreaRoute", "{area:exists=Area}/{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapDefaultControllerRoute();
             });
         }
     }

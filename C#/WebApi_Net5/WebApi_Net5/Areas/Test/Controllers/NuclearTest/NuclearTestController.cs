@@ -22,12 +22,12 @@ namespace WebApi_core5.Controllers
         public NuclearTestController(ILogger<NuclearTestController> logger)
         {
             _logger = logger;
-            _logger.LogDebug("owo", "owo1", "owo2", "owo3", "owo4");
-            _logger.LogTrace("owo", "owo1", "owo2", "owo3", "owo4");
-            _logger.LogInformation("owo", "owo1", "owo2", "owo3", "owo4");
-            _logger.LogWarning("owo", "owo1", "owo2", "owo3", "owo4");
-            _logger.LogError("owo", "owo1", "owo2", "owo3", "owo4");
-            _logger.LogCritical("owo", "owo1", "owo2", "owo3", "owo4");
+            _logger.LogDebug("owo");
+            _logger.LogTrace("owo");
+            _logger.LogInformation("owo");
+            _logger.LogWarning("owo");
+            _logger.LogError("owo");
+            _logger.LogCritical("owo");
         }
 
         /// <summary>
