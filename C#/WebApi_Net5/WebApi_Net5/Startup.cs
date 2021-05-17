@@ -10,6 +10,8 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
 using System.Reflection;
+using WebApi_Net5.Services;
+using WebApi_Net5.Services.Interface;
 
 namespace WebApi_core5
 {
@@ -27,6 +29,9 @@ namespace WebApi_core5
         {
 
             services.AddControllers();
+
+            services.AddScoped<TestDb>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo

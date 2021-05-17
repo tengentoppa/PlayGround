@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 
 namespace WebApi_Net5.Areas.Test.Controllers.NuclearTest.ReqModel
 {
@@ -26,5 +27,16 @@ namespace WebApi_Net5.Areas.Test.Controllers.NuclearTest.ReqModel
         {
             return $"{GreetingMessage ?? "Hello"}, {Name}.";
         }
+    }
+
+    public class DbTest
+    {
+        [Required]
+        public string Query { get; set; }
+        public Params Param { get; set; }
+    }
+    public class Params
+    {
+        public string test { get; set; }
     }
 }

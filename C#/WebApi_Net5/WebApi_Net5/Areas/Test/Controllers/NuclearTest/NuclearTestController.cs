@@ -1,9 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Dapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using WebApi_Net5.Areas.Test.Controllers.NuclearTest.ReqModel;
+using WebApi_Net5.Services;
+using Newtonsoft.Json;
+using System.Data.SqlClient;
+using WebApi_Net5.DTO;
+using WebApi_Net5.Helper;
 
 namespace WebApi_core5.Controllers
 {
@@ -16,18 +24,13 @@ namespace WebApi_core5.Controllers
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
-
+        private readonly TestDb _testDb;
         private readonly ILogger<NuclearTestController> _logger;
 
-        public NuclearTestController(ILogger<NuclearTestController> logger)
+        public NuclearTestController(ILogger<NuclearTestController> logger, TestDb testDb)
         {
+            _testDb = testDb;
             _logger = logger;
-            _logger.LogDebug("owo");
-            _logger.LogTrace("owo");
-            _logger.LogInformation("owo");
-            _logger.LogWarning("owo");
-            _logger.LogError("owo");
-            _logger.LogCritical("owo");
         }
 
         /// <summary>
@@ -84,15 +87,52 @@ namespace WebApi_core5.Controllers
         /// const double pi = 3.1415926;
         /// ```
         /// </remarks>
-        /// <param name="greetings">Request model</param>
+        /// <param name="req">Request model</param>
         /// <returns></returns>
         [HttpPost]
-        public string IAmBatman([FromBody] Greetings greetings)
+        public string IAmBatman([FromBody] Greetings req)
         {
-            return $"{greetings}\n" +
-                $"{string.Join('\n', greetings.Children)}" +
+            return $"{req}\n" +
+                $"{string.Join('\n', req.Children)}" +
                 $"I am Batman peko desu.\n";
         }
+
+        [HttpGet]
+        public string LoggerTest()
+        {
+            _logger.LogDebug("owo");
+            _logger.LogTrace("owo");
+            _logger.LogInformation("owo");
+            _logger.LogWarning("owo");
+            _logger.LogError("owo");
+            _logger.LogCritical("owo");
+
+            return "owo";
+        }
+
+        [HttpPost]
+        public string DbTest([FromBody] DbTest req)
+        {
+            var param = new DynamicParameters();
+            //param.Add("ThirdPartyCode", null, DbType.String);
+            param.AddDynamicParams(new { ThirdPartyCode = default(string) });
+
+            var result = _testDb.C_Test("[Back].[s_ThirdParty_Get]", param, CommandType.StoredProcedure);
+
+            return JsonConvert.SerializeObject(result);
+        }
+
+#if DEBUG
+        [HttpPost]
+        public string DbGet([FromBody] DbTest req)
+        {
+            var param = DbParamHelper.Generate(req.Param);
+
+            var result = _testDb.GetAll<object>(req.Query, param, CommandType.Text);
+
+            return JsonConvert.SerializeObject(result);
+        }
+#endif
 
         [HttpGet]
         public void ExceptionTest()
